@@ -9,10 +9,7 @@ pub fn text(dvi_bytes: &[u8]) -> Vec<u8> {
         use dvi::Instruction::*;
         match inst {
             Set(charcode) | Put(charcode) => output.push(charcode.try_into().unwrap()),
-            Bop(_c, _p) => eprintln!("Beginning of page"),
-            Eop => eprintln!("Ending of page"),
-            Down(y) => eprintln!("Down by {y}"),
-            Y(y) => eprintln!("Down by {y:?} and set y spacing"),
+            Eop | Y(_) | Z(_) => output.push(b'\n'),
             // ignoring horizontal movement, font changes, ...
             _ => {}
         }
