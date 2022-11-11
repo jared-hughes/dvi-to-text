@@ -4,22 +4,19 @@ pub fn text(dvi_bytes: &[u8]) -> Vec<u8> {
     let mut bytes_remaining = dvi_bytes;
     let mut output = Vec::<u8>::new();
     while bytes_remaining.len() > 0 {
-        match dvi::Instruction::parse(bytes_remaining) {
-            Err(e) => eprintln!("Error parsing DVI file: {e:?}"),
-            Ok((b, inst)) => {
-                use dvi::Instruction::*;
-                match inst {
-                    Set(charcode) | Put(charcode) => output.push(charcode.try_into().unwrap()),
-                    Bop(_c, _p) => println!("Beginning of page"),
-                    Eop => println!("Ending of page"),
-                    Down(y) => println!("Down by {y}"),
-                    Y(y) => println!("Down by {y:?} and set y spacing"),
-                    // ignore horizontal movement, font changes, ...
-                    _ => {}
-                }
-                bytes_remaining = b;
-            }
+        let (b, inst) =
+            dvi::Instruction::parse(bytes_remaining).expect("Bytes should be a valid DVI file");
+        use dvi::Instruction::*;
+        match inst {
+            Set(charcode) | Put(charcode) => output.push(charcode.try_into().unwrap()),
+            Bop(_c, _p) => eprintln!("Beginning of page"),
+            Eop => eprintln!("Ending of page"),
+            Down(y) => eprintln!("Down by {y}"),
+            Y(y) => eprintln!("Down by {y:?} and set y spacing"),
+            // ignoring horizontal movement, font changes, ...
+            _ => {}
         }
+        bytes_remaining = b;
     }
     output
 }
