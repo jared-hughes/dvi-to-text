@@ -1,7 +1,24 @@
 [package]
 name = "dvi-to-text"
 version = "0.1.0"
+authors = ["Jared Hughes <jahughes241@gmail.com>"]
+description = """
+dvi-to-text is a small tool converting a DVI file (output from TeX/LaTeX) to
+a string representation of the text contained in the document.
+"""
+readme = "README.md"
+documentation = "https://github.com/jared-hughes/dvi-to-text"
+homepage = "https://github.com/jared-hughes/dvi-to-text"
+repository = "https://github.com/jared-hughes/dvi-to-text"
+keywords = ["latex", "dvi", "tex"]
+categories = ["command-line-utilities"]
+license = "MIT"
 edition = "2021"
+
+[[bin]]
+bench = false
+path = "src/main.rs"
+name = "dvi-to-text"
 
 [dependencies]
 dvi = "0.2.2"
