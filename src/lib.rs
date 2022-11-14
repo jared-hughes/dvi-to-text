@@ -17,7 +17,7 @@ pub fn text(dvi_bytes: &[u8]) -> Vec<u8> {
             Right(x) => {
                 if x > 0 {
                     let design_size = curr_font
-                        .clone()
+                        .to_owned()
                         .expect("Font should be defined")
                         .design_size;
                     // division is equivalent to pseudocode:
@@ -32,14 +32,7 @@ pub fn text(dvi_bytes: &[u8]) -> Vec<u8> {
             FontDef(font_def) => {
                 fonts.insert(font_def.number, font_def);
             }
-            Font(k) => {
-                curr_font = Some(
-                    fonts
-                        .get(&k)
-                        .expect("Font is defined before it is used")
-                        .clone(),
-                );
-            }
+            Font(k) => curr_font = fonts.get(&k).and_then(|x| Some(x.clone())),
             // ignoring horizontal movement, font changes, ...
             _ => {}
         }
