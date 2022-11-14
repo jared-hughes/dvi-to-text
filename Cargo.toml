@@ -1,6 +1,6 @@
 [package]
 name = "dvi-to-text"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Jared Hughes <jahughes241@gmail.com>"]
 description = """
 dvi-to-text is a small tool converting a DVI file (output from TeX/LaTeX) to

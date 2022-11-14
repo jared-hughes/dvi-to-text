@@ -2,7 +2,6 @@ use dvi::Instruction;
 use std::collections::HashMap;
 
 // Treat the entire input as a single batch
-// TODO: stream the input, stdin or something
 pub fn text(dvi_bytes: &[u8]) -> Vec<u8> {
     let mut bytes_remaining = dvi_bytes;
     let mut machine = Machine::new();
@@ -114,8 +113,8 @@ impl Machine {
                 self.font_index = 0;
                 self.position = Position::zero();
                 self.position_stack = Vec::new();
-                // TODO: The ten c_i parameters can be used to identify pages
-                // TODO: The parameter p points to the previous bop command in the file
+                // Currently just assuming the pages are in order in the DVI file; in particular, the ten
+                // c_i parameters are unused, and the p parameter is unused
             }
             Eop => {
                 assert!(
