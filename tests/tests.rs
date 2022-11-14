@@ -32,6 +32,11 @@ fn quick_brown_fox() {
 }
 
 #[test]
+fn leading_spaces() {
+    assert_dvi_to_tex("tests/leading_spaces.dvi", b"A\n B\n  C\n    D\n");
+}
+
+#[test]
 fn multi_newline() {
     assert_dvi_to_tex("tests/multi_newline.dvi", b"A\nB\n\nC\n\n\n\nD\n");
 }
