@@ -24,6 +24,14 @@ fn word_space() {
 }
 
 #[test]
+fn quick_brown_fox() {
+    assert_dvi_to_tex(
+        "tests/quick_brown_fox.dvi",
+        b"The quick brown fox jumps over the lazy dog.\n",
+    );
+}
+
+#[test]
 fn multi_pages() {
     assert_dvi_to_tex(
         "tests/multi_pages.dvi",
