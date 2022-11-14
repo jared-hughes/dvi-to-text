@@ -125,23 +125,31 @@ impl Machine {
                 // Print what you have read since the previous bop
                 // Sort by v coordinate first, then by h coordinate
                 self.chars.sort_by(|a, b| (a.v, a.h).cmp(&(b.v, b.h)));
-                // horizontal coordiante of the right edge of the previous character
+                // horizontal coordinate of the right edge of the previous character
                 let mut prev_h = 0;
                 // vertical coordinate of the previous character
                 let mut prev_v = 0;
                 for char_pos in &self.chars {
                     // insert newlines as necessary
                     // ignore the first newline of every page
-                    if char_pos.v > prev_v && prev_v > 0 {
-                        // TODO: handle multiple newlines
-                        println!("dv: {}", char_pos.v - prev_v);
-                        self.text.push(b'\n');
+                    let dy = char_pos.v - prev_v;
+                    if dy > 0 && prev_v > 0 {
+                        let design_size = self.get_font(char_pos.font_index).design_size;
+                        // assume baseline skip averages 1.2*design_size
+                        // division is equivalent to pseudocode:
+                        // let baseline_skip = (design_size*1.2)
+                        // let num_spaces = round(float_div(x / baseline_skip))
+                        let num_newlines = ((dy as u32) * 5 + design_size / 2) / 6 / design_size;
+                        for _ in 0..num_newlines {
+                            self.text.push(b'\n');
+                        }
                         prev_h = 0;
                     }
                     // insert spaces as necessary
                     let dx = char_pos.h - prev_h;
                     if dx > 0 {
                         let design_size = self.get_font(char_pos.font_index).design_size;
+                        // assume width of a space averages (1/3)*design_size
                         // division is equivalent to pseudocode:
                         // let space_width = (design_size/3)
                         // let num_spaces = round(float_div(x / space_width))
@@ -157,7 +165,6 @@ impl Machine {
                     prev_h = char_pos.h + self.char_width(char_pos.font_index, char_pos.code)
                 }
                 // Always trailing newline for each page
-                println!("EOP");
                 self.text.push(b'\n');
                 self.chars = Vec::new();
             }
