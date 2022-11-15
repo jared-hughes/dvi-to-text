@@ -84,7 +84,13 @@ impl Machine {
         })
     }
     fn get_font(&self, font_index: u32) -> &dvi::FontDef {
-        return self.fonts.get(&font_index).expect("Font should be defined");
+        if let Some(font) = self.fonts.get(&font_index) {
+            font
+        } else {
+            // catches all plain-ascii files
+            eprintln!("Error in reading file. Are you sure you loaded a DVI file?");
+            panic!("Font should be defined");
+        }
     }
     fn char_width(&self, font_index: u32, _char: u8) -> i32 {
         // not using TFM files; just assume width is the design size.
